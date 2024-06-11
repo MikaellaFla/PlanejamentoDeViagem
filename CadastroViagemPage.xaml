@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlanejamentoDeViagem.CadastroViagemPage"
+             Title="Cadastrar Viagem">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <!-- Campo para inserção do destino da viagem -->
+            <Entry x:Name="TxtDestino" Placeholder="Destino"/>
+
+            <!-- Seleção da data de ida da viagem -->
+            <DatePicker x:Name="DataIda" />
+
+            <!-- Seleção da data de retorno da viagem -->
+            <DatePicker x:Name="DataVolta" />
+            
+            <!-- Lista de motivos -->
+            <Picker x:Name="PickerMotivo" Title="Motivo">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Passeio</x:String>
+                        <x:String>Trabalho</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <!-- Lista de transportes -->
+            <Picker x:Name="PickerTransporte" Title="Forma de Transporte" SelectedIndexChanged="OnPickerTransporteSelectedIndexChanged">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Avião</x:String>
+                        <x:String>Carro</x:String>
+                        <x:String>Onibus</x:String>
+                        <x:String>Outro</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <!-- Campo para inserção do local de estadia do usuário durante a viagem -->
+            <Entry x:Name="TxtEstadia" Placeholder="Local de estadia"/>
+            
+            <!-- Campo para inserção do código da passagem -->
+            <Entry x:Name="TxtCodigoPassagem" Placeholder="Código da passagem"/>
+
+            <!-- Campo para inserção do código da reserva na estadia do usuário durante a viagem -->
+            <Entry x:Name="TxtCodigoReserva" Placeholder="Código da reserva na estadia"/>
+
+            <!-- Informações adicionais sobre a viagem. Caso o meio de transporte seja "Avião", o StackLyout abaixo se tornará visível para inserção das informações -->
+            <StackLayout x:Name="AeroportoInfo" IsVisible="False" Spacing="15">
+                <Entry x:Name="TxtAeroportoIda" Placeholder="Aeroporto de ida"/>
+                <Entry x:Name="TxtAeroportoChegada" Placeholder="Aeroporto de chegada"/>
+                <Entry x:Name="TxtCiaAerea" Placeholder="Cia Aérea"/>
+            </StackLayout>
+
+            <!-- Local dos itinerários -->
+            <Label Text="Itinerários" FontSize="Medium" FontAttributes="Bold" />
+
+            <!-- Botão que permite a inserção de itinerários para determinada viagem -->
+            <StackLayout x:Name="ItineraryStackLayout">
+                <Button Text="Adicionar Itinerário" Clicked="OnAdicionarItinerarioClicked" />
+            </StackLayout>
+
+            <!-- Botão que realiza o salvamento da viagem cadastrada -->
+            <Button Text="Cadastrar Viagem" Clicked="OnCadastrarViagemClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

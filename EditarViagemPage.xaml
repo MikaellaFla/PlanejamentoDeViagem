@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PlanejamentoDeViagem.EditarViagemPage"
+             Title="Editar Viagem">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Entry x:Name="TxtDestino" Placeholder="Destino"/>
+            <DatePicker x:Name="DataIda" />
+            <DatePicker x:Name="DataVolta" />
+
+            <Picker x:Name="PickerMotivo" Title="Motivo">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Passeio</x:String>
+                        <x:String>Trabalho</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Picker x:Name="PickerTransporte" Title="Forma de Transporte" SelectedIndexChanged="OnPickerTransporteSelectedIndexChanged">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Avião</x:String>
+                        <x:String>Carro</x:String>
+                        <x:String>Onibus</x:String>
+                        <x:String>Outro</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Entry x:Name="TxtEstadia" Placeholder="Local de estadia"/>
+            <Entry x:Name="TxtCodigoPassagem" Placeholder="Código da passagem"/>
+            <Entry x:Name="TxtCodigoReserva" Placeholder="Código da reserva na estadia"/>
+
+            <StackLayout x:Name="AeroportoInfo" IsVisible="False">
+                <Entry x:Name="TxtAeroportoIda" Placeholder="Aeroporto de ida"/>
+                <Entry x:Name="TxtAeroportoChegada" Placeholder="Aeroporto de chegada"/>
+                <Entry x:Name="TxtCiaAerea" Placeholder="Cia Aérea"/>
+            </StackLayout>
+
+            <Button Text="Salvar" Clicked="OnSalvarViagemClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
