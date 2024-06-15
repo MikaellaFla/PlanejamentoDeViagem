@@ -17,7 +17,6 @@ namespace PlanejamentoDeViagem
         {
             InitializeComponent();
             caminhoBD = System.IO.Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "viagem.db3");
-           
             conexao = new SQLiteConnection(caminhoBD);
             conexao.CreateTable<Viagem>();
             conexao.CreateTable<Itinerario>();
@@ -35,6 +34,7 @@ namespace PlanejamentoDeViagem
                 AeroportoInfo.IsVisible = false;
             }
         }
+
         private void OnAdicionarItinerarioClicked(object sender, EventArgs e)
         {
             var itineraryLayout = new StackLayout { Padding = 5 };
@@ -57,11 +57,28 @@ namespace PlanejamentoDeViagem
             string destino = TxtDestino.Text;
             DateTime dataIda = DataIda.Date;
             DateTime dataVolta = DataVolta.Date;
-            string motivo = PickerMotivo.SelectedItem.ToString();
-            string transporte = PickerTransporte.SelectedItem.ToString();
+            string motivo = PickerMotivo.SelectedItem?.ToString();
+            string transporte = PickerTransporte.SelectedItem?.ToString();
             string estadia = TxtEstadia.Text;
             string codigoPassagem = TxtCodigoPassagem.Text;
             string codigoReserva = TxtCodigoReserva.Text;
+
+            if (string.IsNullOrWhiteSpace(destino) ||
+                string.IsNullOrWhiteSpace(motivo) ||
+                string.IsNullOrWhiteSpace(transporte) ||
+                string.IsNullOrWhiteSpace(estadia) ||
+                string.IsNullOrWhiteSpace(codigoPassagem) ||
+                string.IsNullOrWhiteSpace(codigoReserva))
+            {
+                await DisplayAlert("Erro", "Por favor, preencha todos os campos.", "OK");
+                return;
+            }
+
+            if (!int.TryParse(codigoPassagem, out _) || !int.TryParse(codigoReserva, out _))
+            {
+                await DisplayAlert("Erro", "Código da passagem e Código da reserva devem conter apenas números.", "OK");
+                return;
+            }
 
             string aeroportoIda = null;
             string aeroportoChegada = null;
@@ -72,7 +89,23 @@ namespace PlanejamentoDeViagem
                 aeroportoIda = TxtAeroportoIda.Text;
                 aeroportoChegada = TxtAeroportoChegada.Text;
                 ciaAerea = TxtCiaAerea.Text;
+
+                if (string.IsNullOrWhiteSpace(aeroportoIda) ||
+                    string.IsNullOrWhiteSpace(aeroportoChegada) ||
+                    string.IsNullOrWhiteSpace(ciaAerea))
+                {
+                    await DisplayAlert("Erro", "Por favor, preencha todos os campos do avião.", "OK");
+                    return;
+                }
             }
+
+            if (!Preferences.ContainsKey("UsuarioLogadoId"))
+            {
+                await DisplayAlert("Erro", "Usuário não está logado.", "OK");
+                return;
+            }
+
+            int usuarioId = Preferences.Get("UsuarioLogadoId", -1);
 
             Viagem viagem = new Viagem
             {
@@ -86,7 +119,8 @@ namespace PlanejamentoDeViagem
                 CodigoReserva = codigoReserva,
                 AeroportoIda = aeroportoIda,
                 AeroportoChegada = aeroportoChegada,
-                CiaAerea = ciaAerea
+                CiaAerea = ciaAerea,
+                UsuarioId = usuarioId // Associe a viagem ao usuário logado
             };
 
             conexao.Insert(viagem);
@@ -101,6 +135,13 @@ namespace PlanejamentoDeViagem
                     var hora = ((TimePicker)layout.Children[2]).Time;
                     var local = ((Entry)layout.Children[3]).Text;
 
+                    if (string.IsNullOrWhiteSpace(titulo) ||
+                        string.IsNullOrWhiteSpace(local))
+                    {
+                        await DisplayAlert("Erro", "Por favor, preencha todos os campos do itinerário.", "OK");
+                        return;
+                    }
+
                     Itinerario itinerario = new Itinerario
                     {
                         ViagemId = viagem.Id,
@@ -114,9 +155,19 @@ namespace PlanejamentoDeViagem
                 }
             }
 
-
             await DisplayAlert("Sucesso", "Viagem cadastrada com sucesso!", "OK");
             await Navigation.PopAsync(); // Voltar para a página principal
         }
+
+        private async void OnCodigoTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var entry = (Entry)sender;
+            if (!string.IsNullOrEmpty(entry.Text) && !int.TryParse(entry.Text, out _))
+            {
+                await DisplayAlert("Erro", "Este campo aceita apenas números.", "OK");
+                entry.Text = string.Empty;
+            }
+        }
     }
 }
+

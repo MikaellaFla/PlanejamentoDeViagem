@@ -11,7 +11,7 @@ namespace PlanejamentoDeViagem
     {
         private SQLiteConnection conexao;
         string caminhoBD;  //caminho do banco
-        private List<Viagem> todasViagens;
+        private List<Viagem> todasViagens; // Lista de viagens cadastradas
 
         public MinhasViagensPage()
         {
@@ -19,9 +19,9 @@ namespace PlanejamentoDeViagem
             caminhoBD = System.IO.Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "viagem.db3");
     
             conexao = new SQLiteConnection(caminhoBD);
-            conexao.CreateTable<Viagem>();
-            conexao.CreateTable<Itinerario>();
-            ListarViagens();
+            conexao.CreateTable<Viagem>(); // Criação da tabela de viagens
+            conexao.CreateTable<Itinerario>(); // Criação da tabela de itinerários
+            ListarViagens(); // Chamada da função de listagem das viagens cadastradas
         }
 
         protected override void OnAppearing()
@@ -32,7 +32,13 @@ namespace PlanejamentoDeViagem
 
         public void ListarViagens()
         {
-            var viagens = conexao.Table<Viagem>().ToList();
+            int usuarioId = Preferences.Get("UsuarioLogadoId", -1);
+            if (usuarioId == -1)
+            {
+                DisplayAlert("Erro", "Usuário não logado", "OK");
+                return;
+            }
+            var viagens = conexao.Table<Viagem>().Where(v => v.UsuarioId == usuarioId).ToList();
 
             // Carregar itinerários associados a cada viagem
             foreach (var viagem in viagens)
@@ -43,7 +49,7 @@ namespace PlanejamentoDeViagem
             CollectionViewControl.ItemsSource = viagens;
         }
 
-        private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
+        private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e) // Método da barra de pesquisa
         {
             var searchText = e.NewTextValue;
             var viagens = conexao.Table<Viagem>().ToList();
@@ -63,7 +69,7 @@ namespace PlanejamentoDeViagem
             CollectionViewControl.ItemsSource = viagens;
         }
 
-        private async void OnAdicionarItinerarioClicked(object sender, EventArgs e)
+        private async void OnAdicionarItinerarioClicked(object sender, EventArgs e) // Método do botão de adicionar itinerário
         {
             var button = sender as Button;
             var viagem = button?.BindingContext as Viagem;
@@ -81,18 +87,18 @@ namespace PlanejamentoDeViagem
 
                 viagem.Itinerarios.Add(novoItinerario);
                 conexao.Insert(novoItinerario);
-                ListarViagens(); // Refresh the list
+                ListarViagens(); // Recarrega e atualiza a viagem que recebeu um novo itinerário
             }
         }
 
-        private async void OnEditarItinerarioClicked(object sender, EventArgs e)
+        private async void OnEditarItinerarioClicked(object sender, EventArgs e) // Método chamada ao clicar no botão de editar do itinerário
         {
             var button = sender as Button;
             var itinerario = button?.BindingContext as Itinerario;
 
             if (itinerario != null)
             {
-                // Open a prompt to edit the itinerario details
+                // Abre um prompt para editar as informações do itinerário
                 itinerario.Titulo = await DisplayPromptAsync("Editar Itinerário", "Título:", initialValue: itinerario.Titulo);
                 itinerario.Local = await DisplayPromptAsync("Editar Itinerário", "Local:", initialValue: itinerario.Local);
                 string dataString = await DisplayPromptAsync("Editar Itinerário", "Data (yyyy-MM-dd):", initialValue: itinerario.Data.ToString("yyyy-MM-dd"));
@@ -109,11 +115,11 @@ namespace PlanejamentoDeViagem
                 }
 
                 conexao.Update(itinerario);
-                ListarViagens(); // Recrrega a página de minhas viagens
+                ListarViagens(); // Recarrega a página de minhas viagens
             }
         }
 
-        private async void OnRemoverItinerarioClicked(object sender, EventArgs e)
+        private async void OnRemoverItinerarioClicked(object sender, EventArgs e) // Método do botão remover do itinerário
         {
             var button = sender as Button;
             var itinerario = button?.BindingContext as Itinerario;
@@ -124,13 +130,13 @@ namespace PlanejamentoDeViagem
                 if (confirmar)
                 {
                     conexao.Delete(itinerario);
-                    ListarViagens(); // Refresh the list
+                    ListarViagens(); // Atualiza e recarrega a lista de viagens
                 }
             }
         }
     
 
-private async void Editar_Clicked(object sender, EventArgs e)
+private async void Editar_Clicked(object sender, EventArgs e) // Método do botão de editar de uma viagem
         {
             var btn = (Button)sender;
             if (btn != null && btn.BindingContext is Viagem viagem)
@@ -142,7 +148,7 @@ private async void Editar_Clicked(object sender, EventArgs e)
             }
         }
 
-        private async void Excluir_Clicked(object sender, EventArgs e)
+        private async void Excluir_Clicked(object sender, EventArgs e) // Método do botão de excluir de uma viagem
         {
             var btn = (Button)sender;
             if ((btn != null) && (btn.BindingContext is Viagem v))

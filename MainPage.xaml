@@ -10,6 +10,8 @@
             <Button Text="Cadastrar Viagem" Clicked="BtnCadastrarViagem_Clicked" BackgroundColor="#D81414" TextColor="White" CornerRadius="15"/>
             <!-- Botão que leva até à tela onde estão as viagens já cadastradas-->
             <Button Text="Minhas Viagens" Clicked="BtnMinhasViagens_Clicked" BackgroundColor="#D81414" TextColor="White" CornerRadius="15"/>
+            <!-- Botão de Logout -->
+            <Button Text="Logout" Clicked="OnLogoutClicked" BackgroundColor="#D81414" TextColor="White" CornerRadius="15" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

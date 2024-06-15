@@ -6,6 +6,8 @@ namespace PlanejamentoDeViagem
 {
     public partial class App : Application
     {
+        public static Usuario UsuarioLogado { get; set; }
+
         public static string DatabasePath { get; private set; }
 
         public App()

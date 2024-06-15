@@ -55,5 +55,6 @@ namespace PlanejamentoDeViagem
         [Ignore]
         public List<Itinerario> Itinerarios { get; set; } // Permite a adição de N novos itinerários para cada viagem cadastrada
 
+        public int UsuarioId { get; set; } // Chave estrangeira para associar viagem ao usuário
     }
 }
