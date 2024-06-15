@@ -6,6 +6,7 @@ namespace PlanejamentoDeViagem
     {
         SQLiteConnection conexao;
         bool isPasswordRevealed = false;
+        string variavel_inutil;
 
         public LoginPage()
         {
