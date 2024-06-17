@@ -17,10 +17,8 @@ namespace PlanejamentoDeViagem
         {
             InitializeComponent();
             caminhoBD = System.IO.Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "viagem.db3");
-
             conexao = new SQLiteConnection(caminhoBD);
-            viagemAtual = viagem;
-
+            viagemAtual = viagem; 
             CarregarDados();
         }
 
@@ -45,7 +43,7 @@ namespace PlanejamentoDeViagem
             AeroportoInfo.IsVisible = PickerTransporte.SelectedItem.ToString() == "Avião";
         }
 
-        private async void OnSalvarViagemClicked(object sender, EventArgs e)
+        private async void OnSalvarViagemClicked(object sender, EventArgs e) // Método que salva as alterações feitas na edição da viagem selecionada
         {
             string destino = TxtDestino.Text;
             DateTime dataIda = DataIda.Date;
@@ -61,21 +59,33 @@ namespace PlanejamentoDeViagem
                 string.IsNullOrWhiteSpace(transporte) ||
                 string.IsNullOrWhiteSpace(estadia) ||
                 string.IsNullOrWhiteSpace(codigoPassagem) ||
-                string.IsNullOrWhiteSpace(codigoReserva))
+                string.IsNullOrWhiteSpace(codigoReserva)) // Condição que verifica se todos os campos da viagem foram preenchidos
             {
                 await DisplayAlert("Erro", "Por favor, preencha todos os campos.", "OK");
                 return;
             }
 
-            if (!Regex.IsMatch(codigoPassagem, @"^\d+$"))
+            if (!Regex.IsMatch(codigoPassagem, @"^\d+$")) // Condição que verifica se foram digitadas apenas números no campo
             {
                 await DisplayAlert("Erro", "O código da passagem deve conter apenas números.", "OK");
                 return;
             }
 
-            if (!Regex.IsMatch(codigoReserva, @"^\d+$"))
-            {
+            if (!Regex.IsMatch(codigoReserva, @"^\d+$")) // Condição que verifica se foram digitadas apenas números no campo
+                {
                 await DisplayAlert("Erro", "O código da reserva deve conter apenas números.", "OK");
+                return;
+            }
+
+            if (!ApenasLetrasEspacos(destino)) // Condição que verifica se foram digitadas apenas letras no campo Destino
+            {
+                await DisplayAlert("Erro", "O destino deve conter apenas letras.", "OK");
+                return;
+            }
+
+            if (!ApenasLetrasEspacos(estadia)) // Condição que verifica se foram digitadas apenas letras no campo Estadia
+            {
+                await DisplayAlert("Erro", "O campo de estadia deve conter apenas letras.", "OK");
                 return;
             }
 
@@ -91,9 +101,14 @@ namespace PlanejamentoDeViagem
 
                 if (string.IsNullOrWhiteSpace(aeroportoIda) ||
                     string.IsNullOrWhiteSpace(aeroportoChegada) ||
-                    string.IsNullOrWhiteSpace(ciaAerea))
+                    string.IsNullOrWhiteSpace(ciaAerea)) // Condição que verifica se todos os campos do avião foram preenchidos
                 {
                     await DisplayAlert("Erro", "Por favor, preencha todos os campos do avião.", "OK");
+                    return;
+                }
+                if (!ApenasLetras(aeroportoIda) || !ApenasLetras(aeroportoChegada) || !ApenasLetras(ciaAerea)) // Condição que verifica se foram digitadas apenas letras nos campos do avião
+                {
+                    await DisplayAlert("Erro", "Os campos do avião devem conter apenas letras.", "OK");
                     return;
                 }
             }
@@ -117,6 +132,14 @@ namespace PlanejamentoDeViagem
 
             await DisplayAlert("Sucesso", "Viagem atualizada com sucesso!", "OK");
             await Navigation.PopAsync();
+        }
+        private bool ApenasLetras(string texto) // Condição que verifica se foram digitadas apenas letras
+        {
+            return Regex.IsMatch(texto, @"^[a-zA-Z]+$");
+        }
+        private bool ApenasLetrasEspacos(string texto) // Condição que verifica se foram digitadas apenas letras, permtindo o espaço
+        {
+            return Regex.IsMatch(texto, @"^[a-zA-Z\s]+$");
         }
     }
 }

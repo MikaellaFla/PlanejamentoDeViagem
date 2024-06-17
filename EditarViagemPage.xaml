@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="PlanejamentoDeViagem.EditarViagemPage"
              Title="Editar Viagem">
     <ScrollView>
@@ -12,11 +13,11 @@
 
             <Label Text="Data de ida" FontAttributes="Bold" TextColor="#D81414"/>
             <!-- Edição da data de ida da viagem -->
-            <DatePicker x:Name="DataIda" BackgroundColor="#D9D9D9"/>
+            <DatePicker x:Name="DataIda" BackgroundColor="#D9D9D9" MinimumDate="{x:Static sys:DateTime.Now}"/>
 
             <Label Text="Data de retorno" FontAttributes="Bold" TextColor="#D81414"/>
             <!-- Edição da data de retorno da viagem -->
-            <DatePicker x:Name="DataVolta" BackgroundColor="#D9D9D9"/>
+            <DatePicker x:Name="DataVolta" BackgroundColor="#D9D9D9" MinimumDate="{x:Static sys:DateTime.Now}"/>
 
             <Label Text="Motivo" FontAttributes="Bold" TextColor="#D81414"/>
             <!-- Lista de motivos -->

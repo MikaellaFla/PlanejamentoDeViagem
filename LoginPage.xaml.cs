@@ -6,8 +6,7 @@ namespace PlanejamentoDeViagem
     {
         SQLiteConnection conexao;
         bool isPasswordRevealed = false;
-        string variavel_inutil;
-
+       
         public LoginPage()
         {
             InitializeComponent();
@@ -20,10 +19,12 @@ namespace PlanejamentoDeViagem
         {
             string username = TxtUsername.Text;
             string pin = TxtPin.Text;
+            string nomeUsuario = TxtUsername.Text;
 
             var user = conexao.Table<Usuario>().FirstOrDefault(u => u.Username == username && u.Pin == pin);
             if (user != null)
             {
+                Preferences.Set("UsuarioLogadoNome", nomeUsuario);
                 // Armazenar o ID do usuário logado
                 Preferences.Set("UsuarioLogadoId", user.Id);
                 await Navigation.PushAsync(new MainPage());

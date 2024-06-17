@@ -8,9 +8,7 @@
         <VerticalStackLayout Padding="20" Spacing="20" HorizontalOptions="Center" VerticalOptions="Center">
             <!-- Imagem do ícone da aplicação -->
             <Image Source="icone.png" HeightRequest="200" WidthRequest="200" />
-
-
-        <Label Text="Bem-vindo ao seu planejamento de viagens!" FontSize="24" HorizontalOptions="Center" TextColor="White" FontAttributes="Bold"/>
+            <Label Text="Bem-vindo ao seu planejamento de viagens!" FontSize="24" HorizontalOptions="Center" TextColor="White" FontAttributes="Bold"/>
             <!-- Botão de login -->
             <Button Text="Login" Clicked="OnLoginButtonClicked" BackgroundColor="White" TextColor="#D81414" CornerRadius="15" />
             <!-- Botão de se cadastrar -->

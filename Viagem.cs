@@ -37,10 +37,10 @@ namespace PlanejamentoDeViagem
         [MaxLength(100)]
         public string Estadia { get; set; } // Campo para preencher o local de estadia
 
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string CodigoPassagem { get; set; } // Campo para preencher o código da passagem
 
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string CodigoReserva { get; set; }  // Campo para preencher o código de reserva da estadia
 
         [MaxLength(100)]
